@@ -1,0 +1,1 @@
+import{t as e}from"./jsx-runtime-BkSabwWG.js";var t=e();function n({title:e,body:n}){return(0,t.jsxs)(`div`,{className:`mx-auto max-w-3xl px-4 py-12`,children:[(0,t.jsx)(`h1`,{className:`text-2xl font-bold`,children:e}),(0,t.jsx)(`div`,{className:`mt-6 space-y-4 text-sm leading-relaxed text-ink-soft`,children:n.map(e=>(0,t.jsx)(`p`,{children:e},e))})]})}export{n as t};
