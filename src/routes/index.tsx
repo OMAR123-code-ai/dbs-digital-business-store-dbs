@@ -69,7 +69,7 @@ function Hero() {
       image: "/images/heroes/hero-audio.jpg",
       kicker: "High-Tech  ·  Audio  ·  5G",
       title: "La tech qui avance",
-      accent: "avec vous, partout en Afrique",
+      accent: "avec vous, partout dans le monde",
     },
     {
       image: "/images/heroes/hero-fashion.jpg",
@@ -87,7 +87,7 @@ function Hero() {
         <img
           src={slide.image}
           alt=""
-          className="absolute inset-0 h-full w-full object-cover opacity-80"
+          className="absolute inset-0 h-full w-full object-cover opacity-80 transition-opacity duration-500"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/80 to-ink/10" />
         <div className="relative grid min-h-[340px] items-center px-6 py-10 sm:min-h-[420px] sm:px-12 lg:min-h-[460px]">
@@ -106,22 +106,25 @@ function Hero() {
             </Link>
           </div>
         </div>
-        <div className="relative grid grid-cols-2 gap-3 border-t border-white/10 bg-ink/70 px-4 py-4 backdrop-blur-sm sm:grid-cols-4 sm:px-8">
-          <Trust icon={Check} title="Meilleure qualité" sub="Garantie" />
-          <Trust icon={Truck} title="Livraison rapide" sub="Partout en Afrique" />
-          <Trust icon={ShieldCheck} title="Paiement sécurisé" sub="DBS Payment" />
-          <Trust icon={Headphones} title="Assistance 7j/7" sub="WhatsApp & Contact" />
-        </div>
-        <div className="absolute bottom-24 left-1/2 hidden -translate-x-1/2 gap-1.5 sm:flex">
+
+        {/* Dots — above the trust bar, always visible */}
+        <div className="absolute bottom-[88px] left-1/2 z-10 flex -translate-x-1/2 gap-2 sm:bottom-[96px]">
           {slides.map((_, idx) => (
             <button
               key={idx}
               type="button"
               aria-label={`Slide ${idx + 1}`}
               onClick={() => setI(idx)}
-              className={`h-1.5 rounded-full transition-all ${i === idx ? "w-6 bg-gold" : "w-1.5 bg-white/50"}`}
+              className={`h-2.5 rounded-full transition-all ${i === idx ? "w-7 bg-gold" : "w-2.5 bg-white/60 hover:bg-white"}`}
             />
           ))}
+        </div>
+
+        <div className="relative grid grid-cols-2 gap-3 border-t border-white/10 bg-ink/70 px-4 py-4 backdrop-blur-sm sm:grid-cols-4 sm:px-8">
+          <Trust icon={Check} title="Meilleure qualité" sub="Garantie" />
+          <Trust icon={Truck} title="Livraison rapide" sub="Partout dans le monde" />
+          <Trust icon={ShieldCheck} title="Paiement sécurisé" sub="DBS Payment" />
+          <Trust icon={Headphones} title="Assistance 7j/7" sub="WhatsApp & Contact" />
         </div>
       </div>
     </section>
@@ -251,7 +254,7 @@ function SocialProof() {
           </article>
         ))}
         <aside className="flex flex-col justify-center gap-4 rounded-xl border border-line bg-surface p-5">
-          <ProofLine icon={Truck} title="Livraison rapide" sub="Dans toute l'Afrique" />
+          <ProofLine icon={Truck} title="Livraison rapide" sub="Partout dans le monde" />
           <ProofLine icon={ShieldCheck} title="Paiement sécurisé" sub="DBS Payment" />
           <ProofLine icon={MessageCircle} title="Service client" sub="7j/7 - 24h/24" />
         </aside>
@@ -340,7 +343,7 @@ function FaqAndNewsletter() {
                     type="submit"
                     className="h-11 rounded-full bg-gold px-5 text-sm font-semibold text-gold-fg hover:bg-gold-hover"
                   >
-                    S'abonner
+                    S&apos;abonner
                   </button>
                 </div>
               )}
