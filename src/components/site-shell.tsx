@@ -7,12 +7,10 @@ import {
   Menu,
   MessageCircle,
   Search,
-  ShieldCheck,
   Shirt,
   ShoppingBag,
   Smartphone,
   Sparkles,
-  Truck,
   User,
   Laptop,
   Dumbbell,
@@ -21,9 +19,9 @@ import {
   Instagram,
   Youtube,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CATEGORIES, NAV_LINKS, WHATSAPP_NUMBER, WHATSAPP_TEXT } from "@/data/catalog";
-import { DbsLogo, DbsMark } from "@/components/logo";
+import { DbsLogo } from "@/components/logo";
 import { SearchBox } from "@/components/search-box";
 import { CartDrawer } from "@/components/cart-drawer";
 import { AccountPanel } from "@/components/account-panel";
@@ -66,7 +64,7 @@ function TopBar() {
     <div className="overflow-x-hidden bg-ink text-[11px] text-white/80">
       <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-2 px-4 py-2">
         <p className="hidden items-center gap-2 sm:flex">
-          <span>Livraison rapide dans toute l'Afrique</span>
+          <span>Livraison rapide partout dans le monde</span>
           <span className="text-white/30">|</span>
           <span>Paiement sécurisé</span>
           <span className="text-white/30">|</span>
@@ -77,9 +75,9 @@ function TopBar() {
           to="/promotions"
           className="max-w-full truncate rounded-full bg-gold px-3 py-1 text-[11px] font-semibold text-gold-fg no-underline hover:bg-gold-hover"
         >
-          <span className="sm:hidden">Offre exclusive : jusqu'à -50%</span>
+          <span className="sm:hidden">Offre exclusive : jusqu&apos;à -50%</span>
           <span className="hidden sm:inline">
-            Offre exclusive : jusqu'à -50% sur une sélection d'articles !
+            Offre exclusive : jusqu&apos;à -50% sur une sélection d&apos;articles !
           </span>
         </Link>
       </div>
@@ -96,7 +94,7 @@ function Header() {
 
   return (
     <header className="border-b border-ink-mid bg-ink text-white">
-      <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3">
+      <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-3 sm:gap-4">
         <MobileMenu />
         <DbsLogo inverted />
         <div className="hidden flex-1 md:block">
@@ -153,14 +151,26 @@ function Header() {
 function NavBar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
+  }, [open]);
 
   return (
-    <div className="relative overflow-x-auto border-b border-line bg-surface">
+    <div className="relative border-b border-line bg-surface">
       <div className="mx-auto flex max-w-7xl items-center gap-1 overflow-x-auto px-2 py-0">
-        <div className="relative">
+        <div className="relative" ref={ref}>
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
+            aria-expanded={open}
             className="flex items-center gap-2 whitespace-nowrap px-3 py-3 text-sm font-semibold"
           >
             <LayoutGrid size={16} />
@@ -168,7 +178,7 @@ function NavBar() {
             <ChevronDown size={14} className={cn("transition-transform", open && "rotate-180")} />
           </button>
           {open ? (
-            <div className="absolute left-0 top-full z-30 w-72 overflow-hidden rounded-xl border border-line bg-surface py-2 shadow-[var(--shadow-float)]">
+            <div className="absolute left-0 top-full z-50 w-72 overflow-hidden rounded-xl border border-line bg-surface py-2 shadow-[var(--shadow-float)]">
               {CATEGORIES.map((c) => {
                 const Icon = CAT_ICONS[c.slug];
                 return (
@@ -223,7 +233,10 @@ function MobileMenu() {
       </button>
       {open ? (
         <div className="fixed inset-0 z-50 bg-ink/50 lg:hidden" onClick={() => setOpen(false)}>
-          <div className="h-full w-72 overflow-y-auto bg-surface p-4 text-ink" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="h-full w-72 overflow-y-auto bg-surface p-4 text-ink"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="mb-4 flex items-center justify-between">
               <DbsLogo compact />
               <button type="button" onClick={() => setOpen(false)} aria-label="Fermer">
@@ -267,8 +280,8 @@ function Footer() {
         <div className="lg:col-span-1">
           <DbsLogo inverted />
           <p className="mt-4 text-xs leading-relaxed text-white/55">
-            L'innovation au service de votre quotidien. Produits de qualité, livraison rapide dans toute
-            l'Afrique, paiement mobile sécurisé.
+            L&apos;innovation au service de votre quotidien. Produits de qualité, livraison rapide
+            partout dans le monde, paiement mobile sécurisé.
           </p>
         </div>
         <FooterCol
@@ -313,16 +326,16 @@ function Footer() {
             href={`https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_TEXT}`}
             target="_blank"
             rel="noreferrer"
-            className="mt-4 inline-flex items-center gap-2 rounded-full bg-whatsapp px-4 py-2 text-sm font-semibold text-white no-underline"
+            className="mt-4 inline-flex h-11 w-11 items-center justify-center rounded-full bg-[#25D366] text-white no-underline shadow-md hover:brightness-110"
+            aria-label="WhatsApp"
           >
-            <WhatsAppGlyph />
-            WhatsApp
+            <WhatsAppGlyph className="h-6 w-6" />
           </a>
         </div>
       </div>
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-2 px-4 py-4 text-[11px] text-white/45">
-          <p>© 2025 Digital Business Store. Tous droits réservés.</p>
+          <p>© 2026 Digital Business Store. Tous droits réservés.</p>
           <p>Burkina Faso | Afrique | Monde</p>
         </div>
       </div>
@@ -337,10 +350,7 @@ function FooterCol({ title, links }: { title: string; links: [string, string][] 
       <ul className="space-y-2">
         {links.map(([label, href]) => (
           <li key={href}>
-            <Link
-              to={href as never}
-              className="text-sm text-white/70 no-underline hover:text-gold"
-            >
+            <Link to={href as never} className="text-sm text-white/70 no-underline hover:text-gold">
               {label}
             </Link>
           </li>
@@ -363,7 +373,10 @@ function Social({ icon: Icon, label }: { icon: typeof Facebook; label: string })
 
 function TikTokIcon() {
   return (
-    <span className="grid h-9 w-9 place-items-center rounded-full border border-white/15 text-white/80" title="TikTok">
+    <span
+      className="grid h-9 w-9 place-items-center rounded-full border border-white/15 text-white/80"
+      title="TikTok"
+    >
       <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 fill-current" aria-hidden>
         <path d="M14.5 3c.4 2.6 1.8 4.4 4.5 4.7v2.4c-1.5 0-2.9-.5-4.1-1.3v6.7c0 3.4-2.7 6.1-6.2 6.1S2.5 18.9 2.5 15.5 5.2 9.4 8.7 9.4c.4 0 .8 0 1.2.1v2.6c-.4-.1-.8-.2-1.2-.2-2 0-3.6 1.6-3.6 3.6s1.6 3.6 3.6 3.6 3.6-1.6 3.6-3.6V3h2.2Z" />
       </svg>
@@ -371,24 +384,26 @@ function TikTokIcon() {
   );
 }
 
+/** Floating WhatsApp — official green icon only, no text */
 function WhatsAppFab() {
   return (
     <a
       href={`https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_TEXT}`}
       target="_blank"
       rel="noreferrer"
-      className="fixed bottom-5 right-5 z-40 inline-flex items-center gap-2 rounded-full bg-whatsapp px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-float)] no-underline"
+      className="fixed bottom-5 right-5 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-[0_4px_20px_rgba(37,211,102,0.45)] no-underline transition-transform hover:scale-110"
+      aria-label="Contacter sur WhatsApp"
     >
-      <WhatsAppGlyph />
-      WhatsApp
+      <WhatsAppGlyph className="h-7 w-7" />
     </a>
   );
 }
 
-function WhatsAppGlyph() {
+function WhatsAppGlyph({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden>
-      <path d="M12 2.2A9.8 9.8 0 0 0 2.8 16.7L2 22l5.5-.8A9.8 9.8 0 1 0 12 2.2Zm5.4 13.9c-.2.6-1.2 1.1-1.7 1.2-.4.1-.9.1-1.5 0-.3-.1-.7-.2-1.2-.4-2.1-.9-3.5-2.6-4.1-3.3-.6-.7-1.3-1.9-1.3-3.1 0-1.2.6-1.8.8-2 .2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 1.9c.1.2 0 .4-.1.6l-.4.5c-.1.2-.3.3-.1.6.4.7 1.1 1.5 1.8 2 .8.5 1.5.8 1.8.9.2.1.4.1.6-.1l.6-.7c.2-.2.4-.2.6-.1l2 .9c.3.1.4.2.5.4.1.4 0 1-.2 1.5Z" />
+    <svg viewBox="0 0 24 24" className={cn("fill-current", className)} aria-hidden>
+      <path d="M17.47 14.38c-.29-.14-1.7-.84-1.96-.93-.26-.1-.45-.14-.64.14-.19.29-.73.93-.9 1.12-.16.19-.33.21-.62.07-.29-.14-1.22-.45-2.33-1.43-.86-.77-1.44-1.72-1.61-2.01-.17-.29-.02-.45.13-.59.13-.13.29-.33.43-.5.14-.16.19-.29.29-.48.1-.19.05-.36-.02-.5-.07-.14-.64-1.54-.88-2.11-.23-.56-.47-.48-.64-.49h-.55c-.19 0-.5.07-.76.36-.26.29-1 1-1 2.43s1.02 2.82 1.17 3.02c.14.19 2.01 3.07 4.87 4.3.68.29 1.21.47 1.62.6.68.21 1.3.18 1.79.11.55-.08 1.7-.7 1.94-1.37.24-.67.24-1.25.17-1.37-.07-.12-.26-.19-.55-.33Z" />
+      <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21 5.46 0 9.91-4.45 9.91-9.91C21.95 6.45 17.5 2 12.04 2Zm0 18.06c-1.54 0-3.04-.41-4.35-1.19l-.31-.18-3.11.82.83-3.04-.2-.33a8.16 8.16 0 0 1-1.26-4.37c0-4.51 3.67-8.18 8.19-8.18 4.51 0 8.18 3.67 8.18 8.18 0 4.52-3.67 8.19-8.18 8.19Z" />
     </svg>
   );
 }
@@ -415,5 +430,3 @@ export function CategoryIconGrid() {
     </div>
   );
 }
-
-export { DbsMark };
